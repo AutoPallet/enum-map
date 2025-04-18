@@ -13,7 +13,7 @@ use serde::ser::{Serialize, SerializeTuple, Serializer};
 /// Requires crate feature `"serde"`
 impl<K: Enum + Serialize, V: Serialize> Serialize for EnumMap<K, V> {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        if serializer.is_human_readable() {
+        if serializer.is_human_readable() && cfg!(not(feature = "serde-json-safe")) {
             serializer.collect_map(self)
         } else {
             let mut tup = serializer.serialize_tuple(self.len())?;
@@ -32,7 +32,7 @@ where
     V: Deserialize<'de>,
 {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        if deserializer.is_human_readable() {
+        if deserializer.is_human_readable() && cfg!(not(feature = "serde-json-safe")) {
             deserializer.deserialize_map(HumanReadableVisitor(PhantomData))
         } else {
             deserializer.deserialize_tuple(K::Array::<V>::LENGTH, CompactVisitor(PhantomData))
