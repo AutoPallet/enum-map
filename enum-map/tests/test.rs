@@ -693,3 +693,17 @@ fn test_issue_112() {
     assert_eq!(Outer::E.into_usize(), 8);
     assert_eq!(Outer::E, Outer::from_usize(8));
 }
+
+#[test]
+fn all_values_test() {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Enum)]
+    enum DummyEnum {
+        A,
+        B(bool),
+    }
+
+    assert_eq!(
+        DummyEnum::all_values().collect::<Vec<_>>(),
+        vec![DummyEnum::A, DummyEnum::B(false), DummyEnum::B(true)]
+    );
+}

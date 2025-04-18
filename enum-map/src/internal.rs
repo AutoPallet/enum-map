@@ -28,6 +28,11 @@ pub trait Enum: Sized {
     fn from_usize(value: usize) -> Self;
     /// Returns an unique identifier for a value within range of `0..Array::LENGTH`.
     fn into_usize(self) -> usize;
+
+    /// Returns an iterator over all possible values of this enum.
+    fn all_values() -> impl Iterator<Item = Self> {
+        (0..Self::Array::<()>::LENGTH).map(Self::from_usize)
+    }
 }
 
 /// Array for enum-map storage.
